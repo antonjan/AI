@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Llama2 AI Chat Interface</title>
+</head>
+<body>
+    <h1>Llama2 AI Chat Interface</h1>
+    <form action="/chat" method="POST">
+        <input type="text" name="user_input" size="80" placeholder="Type your query...">
+        <input type="text" name="user_key" size="10" placeholder="Type your key...">
+        <input type="submit" value="Submit">
+	<br>Please waite after submition as results could take some time.
+    </form>
+    <div id="chat-results"></div>
+
+    <script>
+        const form = document.querySelector('form');
+        const chatResults = document.getElementById('chat-results');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const user_input = form.querySelector('input[name="user_input"]').value;
+            form.querySelector('input[name="user_input"]').value = ''; // Clear the input field
+            const user_key = form.querySelector('input[name="user_key"]').value;
+            form.querySelector('input[name="user_key"]').value = ''; // Clear the input field
+
+            const response = await fetch('/chat', {
+                method: 'POST',
+                body: new URLSearchParams({ 'user_input': user_input,'user_key': user_key }),
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            });
+
+            const result = await response.text();
+            chatResults.innerHTML += `<p><strong>You:</strong> ${user_input}</p>`;
+            chatResults.innerHTML += `<p><strong>Llama2 AI:</strong> ${result}</p>`;
+        });
+    </script>
+</body>
+</html>
+
